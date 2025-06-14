@@ -46,6 +46,20 @@ void run_command(const char *cmd) {
         insert_text(cmd + 5);  // print the text after "hoot "
         insert_text("\n");
         insert_prompt();
+    } else if (strncmp(cmd, "why", 3) == 0){
+        FILE *file = fopen("../MOTIVE.md", "r");
+        if (file) {
+            char line[512];
+            insert_text("\n");
+            while (fgets(line, sizeof(line), file)) {
+                insert_text(line);
+            }
+            fclose(file);
+        } else {
+            insert_text("\nCould not load MOTIVE.md\n");
+        }
+        insert_prompt();
+        
     } else {
         insert_text("\nUnknown command\n");
         insert_prompt();

@@ -3,7 +3,7 @@
 
 // Core OS variables
 #define AMITX_NAME           "AmitX OS"
-#define AMITX_VERSION        "0.0.1s"
+#define AMITX_VERSION        "v0.0.1"
 #define AMITX_AUTHOR         "Amity Hagedoorn"
 #define AMITX_CODENAME       "OwlRise"
 #define AMITX_LICENSE        "MIT License"

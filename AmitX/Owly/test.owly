@@ -1,10 +1,8 @@
-func greet() {
-    for (int x = 0; x < 5; x = x + 1) {
-        print(x+1);
-    } 
-    print("Hoot hoot!");
-}
 func main() {
-    
-    greet();
+    int i = 0
+
+    while (i <= 3) {
+        print(i)
+        i = i + 1
+    }
 }

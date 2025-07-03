@@ -35,14 +35,14 @@ CFILE="${BASENAME}.c"
 EXE="${BASENAME}"
 
 # Step 0: Compile the Owly compiler
-gcc -o owlyc owlyc.c
+gcc -o owlyc2 owlyc2.c owlylexer.c
 if [ $? -ne 0 ]; then
   echo "Failed to compile owlyc.c"
   exit 1
 fi
 
 # Step 1: Compile Owly source to C
-./owlyc "$SOURCE" "$CFILE"
+./owlyc2 "$SOURCE" "$CFILE"
 if [ $? -ne 0 ]; then
   echo "Owly compilation failed"
   exit 1

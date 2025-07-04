@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "owlylexer.h"
 
@@ -13,6 +14,7 @@ static Token current_token;
 
 char list_vars[MAX_LISTS][MAX_VAR_LEN];
 int list_var_count = 0;
+bool debug = false;
 char array_vars[MAX_LISTS][MAX_VAR_LEN];
 int array_var_count = 0;
 void do_next();
@@ -43,7 +45,7 @@ void error(const char *msg) {
 }
 
 void next_token() {
-    current_token = lexer_next_token();
+    current_token = lexer_next_token(debug);
 }
 
 void expect(TokenType type, const char *msg) {
@@ -532,8 +534,8 @@ void do_next() {
 int main(int argc, char *argv[]) {
     list_var_count = 0;
     array_var_count = 0;
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s input.owly output.c\n", argv[0]);
+    if (argc != 3 && argc != 4) {
+        fprintf(stderr, "Usage: %s input.owly output.c -d\n", argv[0]);
         return 1;
     }
 
@@ -563,7 +565,12 @@ int main(int argc, char *argv[]) {
         free(source);
         return 1;
     }
-
+    if (argc == 4) {
+        char *arg = argv[3];
+        if (strcmp(arg, "-d") == 0) {
+            debug = true;
+        }
+    }
     fprintf(out, "#include <stdio.h>\n\n");
 
     lexer_init(source);

@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #define TOKEN_TYPE_WIDTH 24
 #define MAX_DEBUG_LINE_WIDTH 70
@@ -32,23 +33,25 @@ static const char* token_type_to_string(TokenType type) {
     }
 }
 
-static void print_token(Token tok) {
-    const char* type_str = token_type_to_string(tok.type);
-    int lexeme_len = (int)tok.length;
-    
-    // First, print the left part into a buffer
-    char buffer[256];
-    int n = snprintf(buffer, sizeof(buffer),
-                     "[DEBUG]: token = { type: %-*s, lexeme: '%.*s'",
-                     TOKEN_TYPE_WIDTH, type_str,
-                     lexeme_len, tok.lexeme);
+static void print_token(Token tok, bool debug) {
+    if (debug) {
+        const char* type_str = token_type_to_string(tok.type);
+        int lexeme_len = (int)tok.length;
+        
+        // First, print the left part into a buffer
+        char buffer[256];
+        int n = snprintf(buffer, sizeof(buffer),
+                        "[DEBUG]: token = { type: %-*s, lexeme: '%.*s'",
+                        TOKEN_TYPE_WIDTH, type_str,
+                        lexeme_len, tok.lexeme);
 
-    // Calculate remaining space until alignment point
-    int padding = MAX_DEBUG_LINE_WIDTH - n;
-    if (padding < 0) padding = 0;
+        // Calculate remaining space until alignment point
+        int padding = MAX_DEBUG_LINE_WIDTH - n;
+        if (padding < 0) padding = 0;
 
-    // Print final aligned output
-    printf("%s%*s}\n", buffer, padding, "");
+        // Print final aligned output
+        printf("%s%*s}\n", buffer, padding, "");
+    }
 }
 
 // Lexer state: source pointer and current position
@@ -78,7 +81,7 @@ static void skip_whitespace() {
     while (isspace(current_char())) advance();
 }
 
-Token lexer_next_token() {
+Token lexer_next_token(bool debug) {
     // First, skip whitespace BEFORE printing debug or anything else
     skip_whitespace();
 
@@ -88,7 +91,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_EOF;
         tok.lexeme = "";
         tok.length = 0;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
 
@@ -127,7 +130,7 @@ Token lexer_next_token() {
         else if (tok.length == 5 && strncmp(start, "while", 5) == 0)
             tok.type = TOKEN_WHILE;
 
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
 
@@ -137,7 +140,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_NUMBER;
         tok.lexeme = start;
         tok.length = &src[pos] - start;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
 
@@ -154,7 +157,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_STRING;
         tok.lexeme = str_start;
         tok.length = len;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
 
@@ -164,7 +167,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_OPERATOR_EQ;
         tok.lexeme = start;
         tok.length = 2;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
     if (current_char() == '!' && src[pos + 1] == '=') {
@@ -172,7 +175,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_OPERATOR_NEQ;
         tok.lexeme = start;
         tok.length = 2;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
     if (current_char() == '<' && src[pos + 1] == '=') {
@@ -180,7 +183,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_OPERATOR_LTE;
         tok.lexeme = start;
         tok.length = 2;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
     if (current_char() == '>' && src[pos + 1] == '=') {
@@ -188,7 +191,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_OPERATOR_GTE;
         tok.lexeme = start;
         tok.length = 2;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
 
@@ -198,7 +201,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_OPERATOR_LT;
         tok.lexeme = start;
         tok.length = 1;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
     if (current_char() == '>') {
@@ -206,7 +209,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_OPERATOR_GT;
         tok.lexeme = start;
         tok.length = 1;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
 
@@ -216,7 +219,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_SYMBOL;
         tok.lexeme = start;
         tok.length = 1;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
     if (current_char() == ']') {
@@ -224,7 +227,7 @@ Token lexer_next_token() {
         tok.type = TOKEN_SYMBOL;
         tok.lexeme = start;
         tok.length = 1;
-        print_token(tok);
+        print_token(tok, debug);
         return tok;
     }
 
@@ -233,6 +236,6 @@ Token lexer_next_token() {
     tok.lexeme = start;
     tok.length = 1;
     advance();
-    print_token(tok);
+    print_token(tok, debug);
     return tok;
 }

@@ -2,6 +2,7 @@
 #define OWLYLEXER_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 // Token types enumeration
 typedef enum {
@@ -42,6 +43,6 @@ typedef struct {
 // Lexer functions
 void lexer_init(const char *source_code);
 void lexer_cleanup(void);
-Token lexer_next_token(void);
+Token lexer_next_token(bool debug);
 
 #endif // OWLYLEXER_H

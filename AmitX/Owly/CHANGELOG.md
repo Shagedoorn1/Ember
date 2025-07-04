@@ -82,3 +82,39 @@ Future versions will feature:
   - Owly is not a fan of snakes so python style for loops are not supported. Maybe in the future she'll be open to it
   - pyfor or forin maybe in the future?
 ---
+## [2.0.0-pre] - *"The Owl Can Read (a little)"*
+*Release date: 4-7-2025*
+---
+She's back — heavier, moodier, and armed with a lexer. **Owly v2** has hatched from the ashes of **v1**   like cryptic phoenix. She's learned to read, but comprehension is... aspirational.
+---
+### Added
+- **`Owlyc2.c` — The Compiler Reborn**
+  - 125.5% bigger. 82% angrier. Function declarations? Still missing.
+  - Think of it as a large, feathered promise. A compiler that dreams big, crashes hard.
+- **`Owlylexer.c` — Now With Extra Glyph Deciphering**
+  - Behold, the great tokenizer: it shreds your code into lexical confetti and logs each piece with divine alignment.
+  - Example:
+  `[DEBUG]: token = { type: KEYWORD_FUNC            , lexeme: 'func'     }`
+  - Yes, those debug lines are deliciously symmetrical. Yes, they will blind you at 3AMYes, those debug lines are deliciously symmetrical. Yes, they will blind you at 3AM.
+  - Perfect for when you want to know exactly where things went wrong, but also kind of want to suffer.
+- **The Ritual of Execution (now with more flags)**  
+  - Run your owly incantations via:
+  ```bash
+  chmod +x owlyrun.sh
+  ./owlyrun.sh [-v|--verbose] [-n|--nodelete] [-d|--debug] <yourfile>.owly
+  ```
+  - Flags let you choose your flavor of pain. Want verbosity? Want lingering temp files? Want to stare deep into the debug void? It's all here.
+### fixed
+- Ghost Box Removal (Shell edition)
+  - A mysterious white rectangle haunted the corner of Perch (the shell). It’s gone now. We don’t speak of it.
+  - Fullscreen mode is now less cursed. Credit to CSS, the unsung exorcist.
+- Maybe Other stuff
+  - Honestly? If it broke before and doesn’t now, that’s a win. Don't ask too many questions.
+---
+
+The owl is learning. Slowly. Reluctantly. With many loud screeches.
+v2 is a rebirth — not perfect, but promising. A lexing, compiling featherbeast that will one day rule your C pipeline like the eldritch queen she is.
+
+---
+> “I ran it and nothing exploded. Feels weird.”
+— Same anonymous user, still probably lying

@@ -1,11 +1,12 @@
 #!/bin/bash
 
 if [ $# -lt 1 ]; then
-  echo "Usage: $0 [--verbose|-v] [--nodelete|-n] <file.owly>"
+  echo "Usage: $0 [--verbose|-v] [--nodelete|-n] [--debug|-d] <file.owly>"
   exit 1
 fi
 VERBOSE=0
 NODELETE=0
+DEBUG=0
 
 while [[ "$1" == -* ]]; do
   case "$1" in
@@ -15,6 +16,10 @@ while [[ "$1" == -* ]]; do
       ;;
     -n|--nodelete)
       NODELETE=1
+      shift
+      ;;
+    -d|--debug)
+      DEBUG=1
       shift
       ;;
     *)
@@ -42,7 +47,13 @@ if [ $? -ne 0 ]; then
 fi
 
 # Step 1: Compile Owly source to C
-./owlyc2 "$SOURCE" "$CFILE"
+if [ $DEBUG -eq 1 ]; then
+  ./owlyc2 "$SOURCE" "$CFILE" -d
+else
+  ./owlyc2 "$SOURCE" "$CFILE"
+fi
+
+
 if [ $? -ne 0 ]; then
   echo "Owly compilation failed"
   exit 1
@@ -67,5 +78,5 @@ echo "Running $EXE.owly"
 rm -f "$CFILE"
 # Optionally keep executable files
 if [ $NODELETE -eq 0 ]; then
-  rm -f "$EXE" "owlyc"
+  rm -f "$EXE" "owlyc2"
 fi

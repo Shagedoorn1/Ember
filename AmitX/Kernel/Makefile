@@ -3,12 +3,12 @@ CC = i686-elf-gcc
 LD = i686-elf-ld
 
 # Flags
-CFLAGS  = -m32 -ffreestanding -O2 -Wall -Wextra -Iinclude
+CFLAGS  = -m32 -ffreestanding -O2 -Wall -Wextra -Iinclude -I..
 LDFLAGS = -T boot/linker.ld -nostdlib
 
 # Sources and objects
-SRC_C = src/kernel.c src/screen.c
-SRC_S = boot/boot.S
+SRC_C = src/kernel.c src/screen.c src/io.c src/string.c src/interrupts.c
+SRC_S = boot/boot.S src/isr_stub.S src/gdt.S
 OBJS  = $(SRC_C:.c=.o) $(SRC_S:.S=.o)
 
 # Default target
@@ -21,6 +21,7 @@ all: kernel.bin
 # Compile assembly files
 %.o: %.S
 	$(CC) $(CFLAGS) -c $< -o $@
+
 
 # Link kernel
 kernel.bin: $(OBJS)

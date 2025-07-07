@@ -1,7 +1,15 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-void clear_screen();
-void print_string(const char* str);
+#include <stdint.h>
 
+#define VGA_WIDTH 80
+#define VGA_HEIGHT 25
+
+void screen_clear();
+void screen_putc(char c);
+void screen_puts(const char* str);
+void screen_setcolor(uint8_t fg, uint8_t bg);
+void screen_newline();
+void draw_statusbar(void);
 #endif

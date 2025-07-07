@@ -4,6 +4,7 @@
 // Core OS variables
 #define AMITX_NAME           "AmitX OS"
 #define AMITX_VERSION        "v0.0.1"
+#define AMITX_BUILD_DATE     "4-7-2025"
 #define OWLY_VERSION         "v2.0.0-pre"
 #define AMITX_AUTHOR         "Amity Hagedoorn"
 #define AMITX_CODENAME       "OwlRise"

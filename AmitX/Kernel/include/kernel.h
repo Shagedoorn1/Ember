@@ -6,6 +6,10 @@ extern "C" {
 #endif
 
 void kernel_main(void);
+void draw_start(void);
+void trigger_divide_by_zero(void);
+volatile int zero = 0;
+int i = 1 / zero;
 
 #ifdef __cplusplus
 }

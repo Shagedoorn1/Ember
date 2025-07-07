@@ -10,7 +10,7 @@ SECTIONS {
 
     .rodata : { *(.rodata*) }
     .data : { *(.data*) }
-    .bss : {
+    .bss : ALIGN(4K) {
         *(.bss*)
         *(COMMON)
     }

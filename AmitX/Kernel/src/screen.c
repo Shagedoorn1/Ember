@@ -122,3 +122,28 @@ void screen_putint(int num) {
     int_to_ascii(num, str);
     screen_puts(str);
 }
+
+void draw_menu(int pointer) {
+    if (pointer == 0) {
+        screen_putf("perch", 15, 0);
+        screen_putf("owly", 15, 0);
+        screen_putf("exit", 15, 0);
+    } else if (pointer == 1) {
+        screen_putf("perch", 0, 15);
+        screen_putf("owly", 15, 0);
+        screen_putf("exit", 15, 0);
+    } else if (pointer == 2) {
+        screen_putf("perch", 15, 0);
+        screen_putf("owly", 0, 15);
+        screen_putf("exit", 15, 0);
+    } else if (pointer == 3){
+        screen_putf("perch", 15, 0);
+        screen_putf("owly", 15, 0);
+        screen_putf("exit", 0, 15);
+    } else {
+        screen_putf("perch", 15, 0);
+        screen_putf("owly", 15, 0);
+        screen_putf("exit", 15, 0);
+    }
+    screen_setcolor(15, 0);
+}

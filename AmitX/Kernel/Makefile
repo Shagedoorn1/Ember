@@ -7,7 +7,7 @@ CFLAGS  = -m32 -ffreestanding -O2 -Wall -Wextra -Iinclude -I..
 LDFLAGS = -T boot/linker.ld -nostdlib
 
 # Sources and objects
-SRC_C = src/kernel.c src/screen.c src/io.c src/string.c src/interrupts.c src/time.c src/timer.c
+SRC_C = src/kernel.c src/screen.c src/io.c src/string.c src/interrupts.c src/time.c src/timer.c src/keyboard.c src/idt.c
 SRC_S = boot/boot.S src/isr_stub.S src/gdt.S
 OBJS  = $(SRC_C:.c=.o) $(SRC_S:.S=.o)
 

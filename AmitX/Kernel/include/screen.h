@@ -14,5 +14,6 @@ void screen_newline();
 void draw_statusbar(void);
 void screen_putf(const char* str, uint8_t fg, uint8_t bg);
 void screen_putint(int num);
+void draw_menu(int pointer);
 
 #endif

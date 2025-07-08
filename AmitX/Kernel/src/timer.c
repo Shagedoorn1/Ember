@@ -28,6 +28,6 @@ void init_timer(uint32_t frequency) {
     // Register ISR 32 (first IRQ remapped) for our timer
     timer_handler = timer_callback;
     register_interrupt_handler(32, timer_callback_wrapper);
-    __asm__ __volatile__ ("sti");
+    
     screen_puts("[init_timer] Timer initialized\n");
 }

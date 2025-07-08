@@ -7,7 +7,7 @@ extern "C" {
 
 void kernel_main(void);
 void draw_start(void);
-void trigger_divide_by_zero(void);
+void kernel_setup();
 
 #ifdef __cplusplus
 }

@@ -5,5 +5,5 @@
 
 void *memset(void *dest, int val, size_t len);
 void *memcpy(void *dest, const void *src, size_t len);
-
+void int_to_ascii(int n, char str[]);
 #endif

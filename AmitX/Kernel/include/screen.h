@@ -12,4 +12,7 @@ void screen_puts(const char* str);
 void screen_setcolor(uint8_t fg, uint8_t bg);
 void screen_newline();
 void draw_statusbar(void);
+void screen_putf(const char* str, uint8_t fg, uint8_t bg);
+void screen_putint(int num);
+
 #endif

@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "string.h"
 #include "amitx_info.h"
 
 
@@ -108,4 +109,16 @@ void draw_statusbar() {
     for (int i = 0; i < pos && i < VGA_WIDTH; i++) {
         video_memory[(VGA_HEIGHT - 1) * VGA_WIDTH + i] = (status_color << 8) | status_text[i];
     }
+}
+
+void screen_putf(const char* str, uint8_t fg, uint8_t bg) {
+    screen_setcolor(fg, bg);
+    screen_puts(str);
+    screen_puts("\n");
+}
+
+void screen_putint(int num) {
+    char str[12];
+    int_to_ascii(num, str);
+    screen_puts(str);
 }

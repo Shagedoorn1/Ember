@@ -21,6 +21,12 @@ Welcome to **AmitX**, the operating system you didn’t know you needed but secr
 - Bash scripts that compile Owly code, compile generated C, and even pop open VS Code when you want to show off.  
 
 ---
+## AmitX 0.1.0 Highlights
+
+- And actual working kernel
+- printing, sleeping, all that stuff
+
+---
 
 ## How to Get Started
 
@@ -42,8 +48,13 @@ chmod +x boot.sh
 ```
 
 The shell will boot up, this might take a few seconds.
-For the same result you can also run:
-`make run`
+
+AmitX now has it's own kernel. It can divide by 0 (really)
+
+```bash
+chmod +x boo.sh
+./boo.sh
+```
 
 ---
 

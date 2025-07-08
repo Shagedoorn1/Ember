@@ -40,6 +40,18 @@ void keyboard_callback() {
                     POINTER--;
                     draw_start();
                 }
+            } else if (c == '\n') {
+                screen_clear();
+                if (POINTER == 1) {
+                    screen_puts("Launching Perch!\n");
+                } else if (POINTER == 2) {
+                    screen_puts("Launching Owly!\n");
+                } else if (POINTER == 3) {
+                    screen_puts("Exiting AmitX Kernel...\n");
+                    while (1) {
+                        asm volatile("hlt");
+                    }
+                }
             }
         }
     }

@@ -30,4 +30,6 @@ void init_timer(uint32_t frequency) {
     register_interrupt_handler(32, timer_callback_wrapper);
     
     screen_puts("[init_timer] Timer initialized\n");
+
+    __asm__ __volatile__ ("sti");
 }

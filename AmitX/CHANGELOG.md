@@ -73,6 +73,7 @@ No emulator magic — just pure hardware hugs.
   - It's real. It's C. It's got assembly in all the right places.
   - Lives in the noble `src/`, birthed by bootloaders, welcomed by GRUB.
   - Prints, divides by zero (on purpose), and recovers with *grace*.
+  - Keyboard input handler (IRQ1 party)  
 - **GDT + IDT Setup**
   - Who needs user space? We're comfy in ring 0.
   - Installed and loaded like legends.
@@ -111,8 +112,6 @@ The kernel will build and boot in QEMU automatically.
 ---
 
 ### Roadmap Hints
-
-- Keyboard input handler (IRQ1 party)  
 - Paging, because memory management is sexy  
 - Multitasking (even if it’s fake at first)  
 - Fancy `screen_puts_at()` so we can print in style  

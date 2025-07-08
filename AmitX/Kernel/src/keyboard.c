@@ -2,7 +2,9 @@
 #include "io.h"
 #include "screen.h"
 #include "kernel.h"
+#include "time.h"
 #include "interrupts.h"
+#include "idt.h"
 #include <stdint.h>
 
 int POINTER = 0;
@@ -44,13 +46,24 @@ void keyboard_callback() {
                 screen_clear();
                 if (POINTER == 1) {
                     screen_puts("Launching Perch!\n");
+                    launch_app(1);
                 } else if (POINTER == 2) {
                     screen_puts("Launching Owly!\n");
                 } else if (POINTER == 3) {
-                    screen_puts("Exiting AmitX Kernel...\n");
-                    while (1) {
-                        asm volatile("hlt");
+                    __asm__ __volatile__ ("sti");
+                    screen_puts("Exiting AmitX Kernel");
+                    for (int i = 0; i < 3; i++) {
+                        sleep(1);
+                        screen_puts(".");
                     }
+                    screen_newline();
+                    sleep(1);
+                    screen_puts("\nbye");
+                    sleep(1);
+                    qemu_exit(0);
+                    
+                } else {
+                    kernel_main();
                 }
             }
         }

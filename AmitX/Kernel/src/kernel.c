@@ -12,6 +12,14 @@
 extern void gdt_install();
 extern POINTER;
 
+void qemu_exit(int code) {
+    outb(0xF4, code);
+}
+
+void launch_app(int app_code) {
+    outb(0xF4, 0x10 + app_code);  // e.g., 0x11 = Perch, 0x12 = Owly
+}
+
 void kernel_setup() {
     gdt_install();
     pic_remap();

@@ -7,7 +7,9 @@ extern "C" {
 
 void kernel_main(void);
 void draw_start(void);
-void kernel_setup();
+void kernel_setup(void);
+void qemu_exit(int code);
+void launch_app(int app_code);
 
 #ifdef __cplusplus
 }

@@ -45,3 +45,5 @@ run "grub-mkrescue -o amitx.iso isodir"
 
 echo "[+] Launching QEMU..."
 run "qemu-system-i386 -cdrom amitx.iso -m 256 -no-reboot -serial stdio -monitor none"
+
+run "make clean"

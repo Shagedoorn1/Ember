@@ -116,3 +116,93 @@ The kernel will build and boot in QEMU automatically.
 - Multitasking (even if it’s fake at first)  
 - Fancy `screen_puts_at()` so we can print in style  
 - Owly code that can call into kernel land
+
+## [0.2.0] — *"Cyclone Engaged"*
+*Release date: 2025-07-11*
+
+A shell within a shell. Cyclone is born — a tiny interactive terminal nested inside the kernel.
+It runs commands, reads virtual files, changes logos, and doesn't even crash when you lie to it.
+
+### Added
+- **Main Menu**
+  - Includes Perch, Owly, Cyclone and Exit
+  - Perch: launch the Perch app
+  - Owly: nothing for now
+  - Cyclone: load Cyclone terminal
+  - Exit: exit the kernel
+  - Navigate with `w`, `d` and `enter`
+- **AmitC**
+  -It's sys_calls and stuff
+  -That's it
+- **Cyclone**
+  - Accepts commands like: `echo`, `clear`, `read`, `hex`, and `coffee` (yes, really).
+- **Command parser**
+  - Includes commands:
+    1. `echo`
+    2. `clear`
+    3. `hex <number>`
+    4. `time`
+    5. `back`
+    6. `quit`
+    7. `switch logo`
+    8. `ls`
+    9. `read <filename>`
+  - It's coding like the 90`s
+- **File System Layer**
+  - Virtual file layer with static files living at paths like `/Saved/hello.txt` and `/Saved/log.txt`
+  - `fs_read(path)` returns the contents of any preloaded file.
+  - `fs_debug_list()` prints the FS tree for dev convenience.
+- **String Utilities Expanded**
+  - Added `strcmp`, `strcat` and a bunch of helpers
+  - `atoi()` now helps turn string arguments into number for commands like `hex`.
+- **Owly, now more owl**
+  - Now includes:
+    - small owly
+     ```
+      ___
+     (o,o)
+     {" "}
+      " "
+      ```
+    - big owly
+    ```
+      ____________
+     / ____  ____ \
+    / / @  \/ @  \ \
+    \ \____/\____/ /\
+     \_____\/_____/||
+     /       /\\\\\//
+     |0xC0FFEE\\\\\\
+     \        \\\\\\
+      \________/\\\\
+        _||_||_  \\\
+         -- --    \\
+    ```
+  - switch between them with `switch logo`
+- **Settings Parser (Planned)**
+  - Reads from `/Saved/setting.cfg` (mocked in-memory for now).
+  - Allows boot-time configuration like logo style default theme, and more.
+- **Menu System Overhaul**
+  - Clean separation between menu navigation and REPL input
+  - `menu` flag enables or disables navigation logic cleanly.
+- **Better Boot Script UX**
+  - `boo.sh` launches QEMU in full-screen with `-full-screen`.
+  - Includes hardware exit via `isa-debug-exit`.
+
+### Tools
+- **Cyclone Commands Are Modular**
+  - All live in `/cyclone/commands.c/.h`
+  - Easily extended with more shell utilities like `cat`, `touch`, or `set`.
+- **Settings System (WIP)**
+  - Parse `key=value` pairs from a virtual `.cfg` file.
+  - Foundation for saving preferences like color theme, default user, shell behaviour.
+### Known Oddities
+- `strcat` doesn't copy — it appends in place, so always work with fresh memory.
+- Reading files more than once with `read` now works correctly
+- Cyclone REPL can still accidentally process phantom charaters, or swallow characters if `first` isn't set correctly, this should be fine.
+### Roadmap Hints
+- Save/Load from real user-modifiable files (not just `const char*`)
+- Writable filesystem with `fs_write()` and `fs_create()`
+- Environment settings saved *across reboots*
+- History, tab autocomplete, maybe even `.bashrc`-like boot behaviour.
+- Owly scripting that can call internal functions and syscalls.

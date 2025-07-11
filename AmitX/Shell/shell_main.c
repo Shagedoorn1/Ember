@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     GtkCssProvider *provider = gtk_css_provider_new();
     gtk_css_provider_load_from_path(
         provider,
-        "../shell_style.css",
+        "/home/shagedoorn/AmitX/Shell/shell_style.css",
         NULL
     );
 

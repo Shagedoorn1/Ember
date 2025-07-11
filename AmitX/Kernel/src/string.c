@@ -1,4 +1,5 @@
 #include "string.h"
+#include <stdint.h>
 
 void *memset(void *dest, int val, size_t len) {
     unsigned char *ptr = dest;
@@ -35,4 +36,42 @@ void int_to_ascii(int n, char str[]) {
         str[j] = str[i - 1 - j];
         str[i - 1 - j] = tmp;
     }
+}
+
+int strcmp(const char* s1, const char* s2) {
+    while (*s1 && (*s1 == *s2)) {
+        s1++;
+        s2++;
+    }
+    return *(const unsigned char*)s1 - *(const unsigned char*)s2;
+}
+
+uint32_t atoi(const char* str) {
+    uint32_t result = 0;
+    while (*str >= '0' && *str <= '9') {
+        result = result * 10 + (*str - '0');
+        str++;
+    }
+    return result;
+}
+
+char* strcat(char* dest, const char* src) {
+    char* original = dest;
+
+    while (*dest) {
+        dest++;
+    }
+
+    while (*src) {
+        *dest++ = *src++;
+    }
+
+    *dest = '\0';
+    return original;
+}
+
+char* strcpy(char* dest, const char* src) {
+    char* original = dest;
+    while ((*dest++ = *src++));
+    return original;
 }

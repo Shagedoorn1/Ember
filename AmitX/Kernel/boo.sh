@@ -45,17 +45,18 @@ run "grub-mkrescue -o amitx.iso isodir"
 
 echo "[+] Launching QEMU..."
 set +e
-qemu-system-i386 -cdrom amitx.iso -m 256 -no-reboot -serial stdio -monitor none -device isa-debug-exit,iobase=0xf4,iosize=0x04
+qemu-system-i386 -cdrom amitx.iso -m 256 -no-reboot -serial stdio -monitor none -device isa-debug-exit,iobase=0xf4,iosize=0x04 -full-screen
 QEMU_EXIT=$?
-echo "$QEMU_EXIT"
 set -e
 
 case $QEMU_EXIT in
     35)
-        echo "[v] Kernel requested: launch Perch"
-        ../Shell/build/shell
+        echo "[+] Kernel requested: launch Perch"
+        cd ../Shell
+        chmod +x boot.sh
+        ./boot.sh
         ;;
     1)
-        echo "[v] Kernel exited gracefully."
+        echo "[+] Kernel exited gracefully."
 esac
 run "make clean"

@@ -3,7 +3,7 @@
 
 // Core OS variables
 #define AMITX_NAME           "AmitX OS"
-#define AMITX_VERSION        "v0.1.1"
+#define AMITX_VERSION        "v0.2.0"
 #define AMITX_BUILD_DATE     "2025-7-8"
 #define OWLY_VERSION         "v2.0.0-pre"
 #define AMITX_AUTHOR         "Amity Hagedoorn"

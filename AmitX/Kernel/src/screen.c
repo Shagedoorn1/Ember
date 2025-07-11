@@ -1,9 +1,12 @@
 #include "screen.h"
 #include "string.h"
 #include "amitx_info.h"
+#include "time.h"
+#include "io.h"
 
 
 #define VIDEO_ADDRESS 0xB8000
+extern int tick_count;
 
 static uint16_t* const video_memory = (uint16_t*) VIDEO_ADDRESS;
 static uint8_t cursor_row = 0;
@@ -25,6 +28,9 @@ static void scroll_if_needed() {
     }
     cursor_row = VGA_HEIGHT - 1;
 }
+static void update_hardware_cursor() {
+    screen_set_cursor(cursor_col, cursor_row);
+}
 
 void screen_clear() {
     for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
@@ -32,6 +38,7 @@ void screen_clear() {
     }
     cursor_row = 0;
     cursor_col = 0;
+    update_hardware_cursor();
 }
 
 void screen_putc(char c) {
@@ -39,12 +46,14 @@ void screen_putc(char c) {
         cursor_col = 0;
         cursor_row++;
         scroll_if_needed();
+        update_hardware_cursor();
         return;
     }
     if (c == '\b') {
         if (cursor_col > 0) {
             cursor_col--;
             video_memory[cursor_row * VGA_WIDTH + cursor_col] = (color << 8) | ' ';
+            update_hardware_cursor();
         }
         return;
     }
@@ -60,6 +69,7 @@ void screen_putc(char c) {
         cursor_row++;
         scroll_if_needed();
     }
+    update_hardware_cursor();
 }
 
 void screen_puts(const char* str) {
@@ -76,6 +86,7 @@ void screen_newline() {
     cursor_col = 0;
     cursor_row++;
     scroll_if_needed();
+    update_hardware_cursor();
 }
 
 void draw_statusbar() {
@@ -123,27 +134,86 @@ void screen_putint(int num) {
     screen_puts(str);
 }
 
+void screen_puthex(uint32_t n) {
+    screen_puts("0x");
+    char hex_chars[] = "0123456789ABCDEF";
+    int started = 0;
+    for (int i = 7; i >= 0; i--) {
+        uint8_t nibble = (n >> (i * 4)) & 0xF;
+        if (nibble != 0 || started || i == 0) {
+            screen_putc(hex_chars[nibble]);
+            started = 1;
+        }
+    }
+}
+
 void draw_menu(int pointer) {
     if (pointer == 0) {
-        screen_putf("perch", 15, 0);
-        screen_putf("owly", 15, 0);
-        screen_putf("exit", 15, 0);
+        screen_putf("Perch", 15, 0);
+        screen_putf("Owly", 15, 0);
+        screen_putf("Cyclone", 15, 0);
+        screen_putf("Exit", 15, 0);
     } else if (pointer == 1) {
-        screen_putf("perch", 0, 15);
-        screen_putf("owly", 15, 0);
-        screen_putf("exit", 15, 0);
+        screen_putf("Perch", 0, 15);
+        screen_putf("Owly", 15, 0);
+        screen_putf("Cyclone", 15, 0);
+        screen_putf("Exit", 15, 0);
     } else if (pointer == 2) {
-        screen_putf("perch", 15, 0);
-        screen_putf("owly", 0, 15);
-        screen_putf("exit", 15, 0);
+        screen_putf("Perch", 15, 0);
+        screen_putf("Owly", 0, 15);
+        screen_putf("Cyclone", 15, 0);
+        screen_putf("Exit", 15, 0);
     } else if (pointer == 3){
-        screen_putf("perch", 15, 0);
-        screen_putf("owly", 15, 0);
-        screen_putf("exit", 0, 15);
+        screen_putf("Perch", 15, 0);
+        screen_putf("Owly", 15, 0);
+        screen_putf("Cyclone", 0, 15);
+        screen_putf("Exit", 15, 0);
+    } else if (pointer == 4) {
+        screen_putf("Perch", 15, 0);
+        screen_putf("Owly", 15, 0);
+        screen_putf("Cyclone", 15, 0);
+        screen_putf("Exit", 0, 15);
     } else {
-        screen_putf("perch", 15, 0);
-        screen_putf("owly", 15, 0);
-        screen_putf("exit", 15, 0);
+        screen_putf("Perch", 15, 0);
+        screen_putf("Owly", 15, 0);
+        screen_putf("Empty", 15, 0);
+        screen_putf("Exit", 15, 0);
     }
     screen_setcolor(15, 0);
+}
+
+void screen_set_cursor(int x, int y) {
+    uint16_t pos = y * VGA_WIDTH + x;
+
+    // Send the high byte of the cursor location
+    outb(0x3D4, 14);
+    outb(0x3D5, (pos >> 8) & 0xFF);
+
+    // Send the low byte of the cursor location
+    outb(0x3D4, 15);
+    outb(0x3D5, pos & 0xFF);
+}
+
+void draw_uptime() {
+    uint8_t saved_x, saved_y;
+    screen_get_cursor(&saved_x, &saved_y);
+
+    int seconds = tick_count / 100;
+    screen_move_cursor(0, 24);
+    screen_puts("Uptime: ");
+    screen_putint(seconds);
+    screen_puts("s   ");
+
+    screen_move_cursor(saved_x, saved_y);
+}
+
+void screen_move_cursor(uint8_t x, uint8_t y) {
+    cursor_col = x;
+    cursor_row = y;
+    screen_set_cursor(x, y); // updates hardware too
+}
+
+void screen_get_cursor(uint8_t* x, uint8_t* y) {
+    *x = cursor_col;
+    *y = cursor_row;
 }

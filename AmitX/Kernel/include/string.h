@@ -11,4 +11,8 @@ int strcmp(const char* s1, const char* s2);
 uint32_t atoi(const char* str);
 char* strcat(char* dest, const char* src);
 char* strcpy(char* dest, const char* src);
+char* strchr(const char* srt, int c);
+char* strdup(const char* str);
+size_t strlen(const char* str);
+void* malloc(size_t size);
 #endif

@@ -132,8 +132,8 @@ It runs commands, reads virtual files, changes logos, and doesn't even crash whe
   - Exit: exit the kernel
   - Navigate with `w`, `d` and `enter`
 - **AmitC**
-  -It's sys_calls and stuff
-  -That's it
+  - It's sys_calls and stuff
+  - That's it
 - **Cyclone**
   - Accepts commands like: `echo`, `clear`, `read`, `hex`, and `coffee` (yes, really).
 - **Command parser**
@@ -206,3 +206,7 @@ It runs commands, reads virtual files, changes logos, and doesn't even crash whe
 - Environment settings saved *across reboots*
 - History, tab autocomplete, maybe even `.bashrc`-like boot behaviour.
 - Owly scripting that can call internal functions and syscalls.
+
+### Fixed
+- **Kernel**
+  - Fixed bug with `back` command that would print characters in the main menu

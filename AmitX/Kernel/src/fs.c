@@ -13,7 +13,9 @@ static int file_count = 0;
 void fs_init() {
     files[0].path = "/Saved/hello.txt";
     files[0].content = "Hello from /Saved/hello.txt!\nThis is a test file.";
-    file_count = 1;
+    files[1].path = "/Saved/settings.cfg";
+    files[1].content = "logo=big\ntheme=dark\n";
+    file_count = 2;
     fs_add("/Saved/log.txt", "System log started.\n");
     fs_add("/Saved/me.txt", "Amity!");
 }

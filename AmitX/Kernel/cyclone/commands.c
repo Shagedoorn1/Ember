@@ -46,6 +46,7 @@ void execute_command(const char* input) {
         screen_puts(" seconds");
     } else if (strcmp(input, "back") == 0) {
         load_cyclone = 0;
+        cyclone_main(0);
         draw_start();
     } else if (strcmp(input, "switch logo") == 0) {
         if (version == 1) {
@@ -56,14 +57,15 @@ void execute_command(const char* input) {
         cyclone_main(0);
     } else if (strcmp(input, "help") == 0) {
         screen_puts("Available commands:\n");
-        screen_puts("  echo <text>   - Print text\n");
-        screen_puts("  hex <number>  - Print number as hex\n");
-        screen_puts("  time          - Show uptime\n");
-        screen_puts("  clear         - Clear screen\n");
-        screen_puts("  back          - Return to menu\n");
-        screen_puts("  quit          - Exit system\n");
-        screen_puts("  coffee        - Print 0xC0FFEE\n");
-        screen_puts("  ls            - Print files");
+        screen_puts("  echo/hoot <text>   - Print text\n");
+        screen_puts("  hex <number>       - Print number as hex\n");
+        screen_puts("  time               - Show uptime\n");
+        screen_puts("  clear              - Clear screen\n");
+        screen_puts("  back               - Return to menu\n");
+        screen_puts("  quit               - Exit system\n");
+        screen_puts("  coffee             - Print 0xC0FFEE\n");
+        screen_puts("  ls                 - Print files\n");
+        screen_puts("  switch logo        - Switch Owly ASCII art");
     } else if (strcmp(input, "ls") == 0) {
         screen_puts("\b\b\b");
         fs_debug_list();

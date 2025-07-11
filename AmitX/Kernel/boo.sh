@@ -47,6 +47,8 @@ echo "[+] Launching QEMU..."
 set +e
 qemu-system-i386 -cdrom amitx.iso -m 256 -no-reboot -serial stdio -monitor none -device isa-debug-exit,iobase=0xf4,iosize=0x04 -full-screen
 QEMU_EXIT=$?
+
+echo "$QEMU_EXIT"
 set -e
 
 case $QEMU_EXIT in

@@ -8,14 +8,19 @@
 #include "idt.h"
 #include "amitc.h"
 #include "fs.h"
+#include "commands.h"
+#include "settings.h"
 #include "cyclone.h"
 #include <stdint.h>
 
 int menu = 0;
 
+
 extern void gdt_install();
 extern int POINTER;
 extern int load_cyclone;
+int owly;
+
 
 void qemu_exit(int code) {
     outb(0xF4, code);
@@ -32,6 +37,7 @@ void kernel_setup() {
     init_keyboard();
     init_timer(100);
     fs_init();
+    //settings_load();
     screen_clear();
 }
 
@@ -41,8 +47,13 @@ void draw_start() {
     draw_statusbar();
     screen_puts("\n");
     draw_menu(POINTER);
+
     menu = 1;
+
+    //const char* logo_pref = settings_get("logo");
+
     if (load_cyclone) {
+        screen_puts("loading cyclone");
         cyclone_main(1);
     }
 }
@@ -79,8 +90,6 @@ void test_fs() {
 void kernel_main(void) {
     kernel_setup();
     draw_start();
-
-    
     while (1){
 
     }

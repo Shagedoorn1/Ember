@@ -38,7 +38,7 @@ void draw_logo2() {
     screen_puts("   |0xC0FFEE\\\\\\\\\\\\\n");
     screen_puts("   \\        \\\\\\\\\\\\\n");
     screen_puts("    \\________/\\\\\\\\\n");
-    screen_puts("      _||_||_  \\\\\\\n");
-    screen_puts("       -- --    \\\\\n");
+    screen_puts("      _||_||_   \\\\\n");
+    screen_puts("       -- --     \\\n");
     screen_puts("    Owly, by Amity\n");
 }

@@ -8,18 +8,27 @@
 #include "string.h"
 
 extern int menu;
+extern int load_cyclone;
 int version = 1;
 
 void cyclone_main(int first) {
+    screen_putint(version);
     menu = 0;
     screen_clear();
+    
     screen_puts("Cyclone REPL v0.1\nType 'help' for commands\n\n");
     draw_logo(version);
+    screen_puts("Owly version: ");
+    screen_putint(version);
+    screen_newline();
 
     char input[128];
     int pos = 0;
 
     while (1) {
+        if (load_cyclone == 0) {
+            break;
+        }
         screen_puts("> ");
         pos = 0;
 

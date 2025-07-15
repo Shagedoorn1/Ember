@@ -207,6 +207,14 @@ It runs commands, reads virtual files, changes logos, and doesn't even crash whe
 - History, tab autocomplete, maybe even `.bashrc`-like boot behaviour.
 - Owly scripting that can call internal functions and syscalls.
 
+## [0.2.1] — *Remember*
+### Added
+- **Kernel**
+  - Paging, finally
+  - An actually working `malloc()` and `strdup()`
+  - page mapping, sort of, some physical address might not work so be carefull
 ### Fixed
 - **Kernel**
   - Fixed bug with `back` command that would print characters in the main menu
+### Up next
+  - Experiments with improved graphics are being done

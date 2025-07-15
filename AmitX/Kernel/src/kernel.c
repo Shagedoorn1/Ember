@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "Paging/paging.h"
 #include "io.h"
 #include "string.h"
 #include "timer.h"   // ✅ Timer init
@@ -7,9 +8,9 @@
 #include "interrupts.h"
 #include "idt.h"
 #include "amitc.h"
+#include "heap.h"
 #include "fs.h"
 #include "commands.h"
-#include "settings.h"
 #include "cyclone.h"
 #include <stdint.h>
 
@@ -37,60 +38,32 @@ void kernel_setup() {
     init_keyboard();
     init_timer(100);
     fs_init();
-    //settings_load();
-    screen_clear();
+    paging_init();
+    clear();
 }
 
 void draw_start() {
     kernel_setup();
-    screen_puts("Hello from the AmitX Kernel\n");
+    puts("Hello from the AmitX Kernel\n");
     draw_statusbar();
-    screen_puts("\n");
+    puts("\n");
     draw_menu(POINTER);
 
     menu = 1;
 
-    //const char* logo_pref = settings_get("logo");
+
 
     if (load_cyclone) {
-        screen_puts("loading cyclone");
+        puts("loading cyclone");
         cyclone_main(1);
-    }
-}
-
-void test_fs() {
-    fs_init();
-    fs_debug_list();
-
-    const char* content = fs_read("/Saved/hello.txt");
-    if (content) {
-        screen_puts("\nContent of hello.txt:\n");
-        screen_puts(content);
-    } else {
-        screen_puts("File not found.\n");
-    }
-    screen_newline();
-    const char* content2 = fs_read("/Saved/log.txt");
-    if (content2) {
-        screen_puts("\nContent of log.txt:\n");
-        screen_puts(content2);
-    } else {
-        screen_puts("File not found.\n");
-    }
-    screen_newline();
-    const char* content3 = fs_read("/Saved/me.txt");
-    if (content3) {
-        screen_puts("\nContent of me.txt:\n");
-        screen_puts(content3);
-    } else {
-        screen_puts("File not found.\n");
     }
 }
 
 void kernel_main(void) {
     kernel_setup();
     draw_start();
-    while (1){
 
+    while (1){
+        //blink();
     }
 }

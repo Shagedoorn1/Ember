@@ -39,7 +39,7 @@ static const char scancode_map_shift[] = {
     'Q','W','E','R','T','Y','U','I','O','P','{','}','\n',         // Enter
     0,    // Control
     'A','S','D','F','G','H','J','K','L',':','\"','~',
-    '\S',    // Left shift
+    '0',    // Left shift
     '\\','Z','X','C','V','B','N','M','<','>','?',
     0,    // Right shift
     '*',
@@ -84,20 +84,20 @@ void keyboard_callback() {
                     draw_start();
                 } else if (c == '\n' && POINTER != 0) {
                     menu = 0;
-                    screen_clear();
+                    clear();
                     if (POINTER == 1) {
                         menu = 0;
-                        screen_puts("Launching Perch!\n");
+                        puts("Launching Perch!\n");
                         launch_app(1);
                     } else if (POINTER == 2) {
                         menu = 0;
-                        screen_puts("Launching Owly!\n");
+                        puts("Launching Owly!\n");
                     } else if (POINTER == 4) {
                         menu = 0;
-                        screen_puts("Exiting AmitX Kernel");
+                        puts("Exiting AmitX Kernel");
                         for (int i = 0; i < 3; i++) {
                             sleep(1);
-                            screen_puts(".");
+                            puts(".");
                         }
                         sleep(1);
                         qemu_exit(0);

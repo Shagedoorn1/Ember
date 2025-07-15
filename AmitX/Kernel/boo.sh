@@ -47,6 +47,8 @@ echo "[+] Launching QEMU..."
 set +e
 qemu-system-i386 -cdrom amitx.iso -m 256 -no-reboot -serial stdio -monitor none -device isa-debug-exit,iobase=0xf4,iosize=0x04 -full-screen
 QEMU_EXIT=$?
+run "make clean"
+
 
 echo "$QEMU_EXIT"
 set -e
@@ -60,5 +62,8 @@ case $QEMU_EXIT in
         ;;
     1)
         echo "[+] Kernel exited gracefully."
+        ;;
+    0)
+        echo "[+] You did the ctrl+C didn't you?"
+        ;;
 esac
-run "make clean"

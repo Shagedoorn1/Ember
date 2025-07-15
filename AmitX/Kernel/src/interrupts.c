@@ -27,8 +27,8 @@ void isr_handler(int interrupt_number) {
 }
 
 void isr0_handler() {
-    screen_setcolor(0, 15);
-    screen_puts("[ERRNO-0]: Zero-division\n");
+    setcolor(0, 15);
+    puts("[ERRNO-0]: Zero-division\n");
     while (1) {}
 }
 
@@ -53,5 +53,5 @@ void pic_remap() {
     outb(0x21, 0x00);
     outb(0xA1, 0x00);
 
-    screen_puts("Remap complete\n");
+    puts("Remap complete\n");
 }

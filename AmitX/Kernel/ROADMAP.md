@@ -8,9 +8,9 @@
 
 To build a delightfully handcrafted OS from scratch — one that boots, blinks, hoots, and eventually runs its own shell, compiler, and apps, all while looking fabulous doing it.
 
-We're not cloning UNIX.  
-We're not rewriting Linux.  
-We're building **AmitX** — the OS that perches on your CPU and screams into the void with elegance.
+I'm not cloning UNIX.  
+I'm not rewriting Linux.  
+I'm building **AmitX** — the OS that perches on your CPU and screams into the void with elegance.
 
 ---
 
@@ -28,24 +28,24 @@ We're building **AmitX** — the OS that perches on your CPU and screams into th
 - [x] A very dramatic boot screen (`screen_puts` is the real MVP)
 - [x] "Perch" menu system with item highlighting and selection
 - [x] `hlt`-based “exit” that feels like a mic drop
+- [x] Refactor IDT setup to `idt.c` — cleaner than a hoot’s wing
+- [x] Build app launcher: press Enter, run app from memory
+- [x] Proper scancode buffer so we can *actually* type things
 
 ### Up Next:
-- [ ] Refactor IDT setup to `idt.c` — cleaner than a hoot’s wing
-- [ ] Build app launcher: press Enter, run app from memory
-- [ ] Proper scancode buffer so we can *actually* type things
-- [ ] Log macros (`klog_info`, `klog_hoot`, etc.) for extra flair
-- [ ] Begin first experiments with Perch → launched directly from kernel
+- [] Log macros (`klog_info`, `klog_hoot`, etc.) for extra flair
 
 ---
 
 ## STAGE 0.2 – “Featherweight Framework”
 
 > You ever seen a bird build a house? We're building a whole operating system.
+### Already flying:
+- [x] A `malloc` and `free` (don’t get greedy)
+- [x] A kernel heap, because global variables are for cowards
+- [x] Simple paging or at least basic memory protection
 
 ### Upcoming sorcery:
-- [ ] A primitive `malloc` and `free` (don’t get greedy)
-- [ ] A kernel heap, because global variables are for cowards
-- [ ] Simple paging or at least basic memory protection
 - [ ] Better input: command buffer, editing, history
 - [ ] Write-only dreams: kernel logs and debug info to screen or serial
 

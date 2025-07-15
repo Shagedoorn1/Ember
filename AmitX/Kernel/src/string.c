@@ -1,24 +1,6 @@
 #include "string.h"
 #include <stdint.h>
-
-#define HEAP_START 0x100000
-#define HEAP_SIZE  0x10000
-
-void *memset(void *dest, int val, size_t len) {
-    unsigned char *ptr = dest;
-    while (len-- > 0)
-        *ptr++ = (unsigned char)val;
-    return dest;
-}
-
-void *memcpy(void *dest, const void *src, size_t len) {
-    unsigned char *d = dest;
-    const unsigned char *s = src;
-    while (len--) 
-        *d++ = *s++;
-    return dest;
-
-}
+#include "heap.h"
 
 void int_to_ascii(int n, char str[]) {
     int i = 0, sign = n;
@@ -105,14 +87,64 @@ size_t strlen(const char* str) {
     return len;
 }
 
-static uint8_t* heap = (uint8_t*)HEAP_START;
-static uint8_t* heap_end = (uint8_t*)(HEAP_START + HEAP_SIZE);
-
-void* malloc(size_t size) {
-    if (heap + size >= heap_end) {
-        return NULL;
+int strncmp(const char* s1, const char* s2, size_t n) {
+    while (n && *s1 && (*s1 == *s2)) {
+        s1++;
+        s2++;
+        n--;
     }
-    void* result = heap;
-    heap += size;
-    return result;
+    if (n == 0) return 0;
+    return *(const unsigned char*)s1 - *(const unsigned char*)s2;
+}
+
+char* strncpy(char* dest, const char* src, size_t n) {
+    char* original = dest;
+    while (n && *src) {
+        *dest++ = *src++;
+        n--;
+    }
+    while (n--) {
+        *dest++ = '\0';
+    }
+    return original;
+}
+
+size_t strnlen(const char* s, size_t maxlen) {
+    size_t len = 0;
+    while (len < maxlen && s[len]) {
+        len++;
+    }
+    return len;
+}
+
+char* strchrnul(const char* s, int c) {
+    while (*s) {
+        if (*s == (char)c) {
+            return (char*)s;
+        }
+        s++;
+    }
+    return (char*)s;  // Return pointer to null terminator
+}
+
+char* strrchr(const char* s, int c) {
+    const char* last = NULL;
+    while (*s) {
+        if (*s == (char)c) {
+            last = s;
+        }
+        s++;
+    }
+    return (char*)last;
+}
+
+char* strdup_n(const char* s, size_t n) {
+    size_t len = strnlen(s, n);
+    char* copy = (char*)malloc(len + 1);
+    if (!copy) return NULL;
+    for (size_t i = 0; i < len; i++) {
+        copy[i] = s[i];
+    }
+    copy[len] = '\0';
+    return copy;
 }

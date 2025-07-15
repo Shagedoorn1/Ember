@@ -2,6 +2,28 @@
 #include "logo.h"
 #include "amitx_info.h"
 
+void draw_logo1() {
+    move_cursor(0, 2);
+    puts("     ___\n");
+    puts("    (o,o)\n");
+    puts("    {\" \"}\n");
+    puts("     \" \" \n");
+}
+void draw_logo2() {
+    move_cursor(0, 2);
+    puts("    ____________\n");
+    puts("   / ____  ____ \\\n");
+    puts("  / / @  \\/ @  \\ \\\n");
+    puts("  \\ \\____/\\____/ /\\\n");
+    puts("   \\_____\\/_____/||\n");
+    puts("   /       /\\\\\\\\\\//\n");
+    puts("   |0xC0FFEE\\\\\\\\\\\\\n");
+    puts("   \\        \\\\\\\\\\\\\n");
+    puts("    \\________/\\\\\\\\\n");
+    puts("      _||_||_   \\\\\n");
+    puts("       -- --     \\\n");
+}
+
 void draw_logo(int version) {
     
     switch (version) {
@@ -16,29 +38,4 @@ void draw_logo(int version) {
             break;
     }
     
-}
-
-void draw_logo1() {
-    screen_move_cursor(0, 2);
-    screen_puts("     ___\n");
-    screen_puts("    (o,o)\n");
-    screen_puts("    {\" \"}\n");
-    screen_puts("     \" \" \n");
-    screen_puts("  Owly, by Amity\n");
-
-}
-void draw_logo2() {
-    screen_move_cursor(0, 2);
-    screen_puts("    ____________\n");
-    screen_puts("   / ____  ____ \\\n");
-    screen_puts("  / / @  \\/ @  \\ \\\n");
-    screen_puts("  \\ \\____/\\____/ /\\\n");
-    screen_puts("   \\_____\\/_____/||\n");
-    screen_puts("   /       /\\\\\\\\\\//\n");
-    screen_puts("   |0xC0FFEE\\\\\\\\\\\\\n");
-    screen_puts("   \\        \\\\\\\\\\\\\n");
-    screen_puts("    \\________/\\\\\\\\\n");
-    screen_puts("      _||_||_   \\\\\n");
-    screen_puts("       -- --     \\\n");
-    screen_puts("    Owly, by Amity\n");
 }

@@ -56,6 +56,7 @@ void execute_command(const char* input) {
         puts(" seconds");
     } else if (strcmp(input, "back") == 0) {
         load_cyclone = 0;
+        clear();
         draw_start();
     } else if (strcmp(input, "switch logo") == 0) {
         if (version == 1) {

@@ -7,7 +7,7 @@ CFLAGS  = -m32 -ffreestanding -O2 -Wall -Wextra -Iinclude -IAmitC -Icyclone -Isr
 LDFLAGS = -T boot/linker.ld -nostdlib
 
 # Sources and objects
-SRC_C = src/kernel.c src/screen.c src/io.c src/string.c src/interrupts.c src/time.c src/timer.c src/keyboard.c src/idt.c src/logo.c src/fs.c src/settings.c src/Paging/paging.c src/heap.c src/tests.c
+SRC_C = src/kernel.c src/screen.c src/io.c src/string.c src/interrupts.c src/time.c src/timer.c src/keyboard.c src/idt.c src/logo.c src/fs.c src/settings.c src/Paging/paging.c src/heap.c src/tests.c src/task.c src/app.c
 SRC_AMITC = AmitC/amitc.c
 SRC_CYCLONE = cyclone/cyclone.c cyclone/commands.c cyclone/utils.c
 SRC_S = boot/boot.S src/isr_stub.S src/gdt.S

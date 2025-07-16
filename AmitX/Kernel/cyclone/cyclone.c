@@ -53,6 +53,7 @@ void cyclone_main(int first) {
             } else if (c >= 32 && pos < sizeof(input) - 1) {
                 input[pos++] = c;
                 putc(c);
+                next_white();
             }
         }
         first = 0;

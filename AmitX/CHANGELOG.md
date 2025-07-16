@@ -213,6 +213,17 @@ It runs commands, reads virtual files, changes logos, and doesn't even crash whe
   - Paging, finally
   - An actually working `malloc()` and `strdup()`
   - page mapping, sort of, some physical address might not work so be carefull
+  - Simple GUI elements to make AmitX just a tiny bit prettier:
+    1. `draw_box(x, y, width, height, color)`
+    2. `draw_title_box(x, y, width, height, title, color)`
+    3. `draw_progress_bar(x, y, width, percent, fg, bg)`
+  - Screen.h now also provides several color themes:
+    1. `COLOR_THEME_DEFAULT = 0x0F` white on black
+    2. `COLOR_THEME_STATUS 0x1F` white on blue
+    3. `COLOR_THEME_HIGHLIGHT = 0xF0` black on white
+  - Main menu is now drawn with the `draw_list` function
+  - Simple task managing and scheduling
+  - A `|` in cyclone as the cursor
 ### Fixed
 - **Kernel**
   - Fixed bug with `back` command that would print characters in the main menu

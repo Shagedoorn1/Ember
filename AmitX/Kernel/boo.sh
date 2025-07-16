@@ -54,6 +54,10 @@ echo "$QEMU_EXIT"
 set -e
 
 case $QEMU_EXIT in
+    37)
+        echo "[+] Kernel requested: launch Owly"
+        echo "[x] HOOT HOOT!"
+        ;;
     35)
         echo "[+] Kernel requested: launch Perch"
         cd ../Shell

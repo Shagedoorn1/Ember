@@ -3,6 +3,7 @@
 #include "amitx_info.h"
 #include "time.h"
 #include "io.h"
+#include <stdarg.h>
 
 
 #define VIDEO_ADDRESS 0xB8000
@@ -45,6 +46,9 @@ static void scroll_if_needed() {
     cursor_row = VGA_HEIGHT - 1;
 }
 
+void next_white() {
+    video_memory[cursor_row * VGA_WIDTH + cursor_col] = (0x0F << 8) | 179; // white on black
+}
 
 void clear() {
     for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
@@ -66,7 +70,8 @@ void putc(char c) {
     if (c == '\b') {
         if (cursor_col > 0) {
             cursor_col--;
-            video_memory[cursor_row * VGA_WIDTH + cursor_col] = (color << 8) | ' ';
+            video_memory[cursor_row * VGA_WIDTH + cursor_col] = (color << 8) | 179;
+            video_memory[cursor_row * VGA_WIDTH + cursor_col + 1] = (color << 8) | ' ';
             update_hardware_cursor();
         }
         return;
@@ -161,41 +166,6 @@ void puthex(uint32_t n) {
     }
 }
 
-void draw_menu(int pointer) {
-    if (pointer == 0) {
-        putf("Perch", 15, 0);
-        putf("Owly", 15, 0);
-        putf("Cyclone", 15, 0);
-        putf("Exit", 15, 0);
-    } else if (pointer == 1) {
-        putf("Perch", 0, 15);
-        putf("Owly", 15, 0);
-        putf("Cyclone", 15, 0);
-        putf("Exit", 15, 0);
-    } else if (pointer == 2) {
-        putf("Perch", 15, 0);
-        putf("Owly", 0, 15);
-        putf("Cyclone", 15, 0);
-        putf("Exit", 15, 0);
-    } else if (pointer == 3){
-        putf("Perch", 15, 0);
-        putf("Owly", 15, 0);
-        putf("Cyclone", 0, 15);
-        putf("Exit", 15, 0);
-    } else if (pointer == 4) {
-        putf("Perch", 15, 0);
-        putf("Owly", 15, 0);
-        putf("Cyclone", 15, 0);
-        putf("Exit", 0, 15);
-    } else {
-        putf("Perch", 15, 0);
-        putf("Owly", 15, 0);
-        putf("Empty", 15, 0);
-        putf("Exit", 15, 0);
-    }
-    setcolor(15, 0);
-}
-
 void draw_uptime() {
     uint8_t saved_x, saved_y;
     get_cursor(&saved_x, &saved_y);
@@ -230,4 +200,149 @@ void move_cursor(uint8_t x, uint8_t y) {
 void get_cursor(uint8_t* x, uint8_t* y) {
     *x = cursor_col;
     *y = cursor_row;
+}
+
+void draw_box(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t fg, uint8_t bg) {
+    if (width < 2 || height < 2) return; //Too small
+
+    uint8_t color = (bg << 4) | (fg & 0x0F);
+
+    setcolor((color & 0x0F), (color >> 4));
+
+    video_memory[y * VGA_WIDTH + x] = (color << 8) | 218; //
+    video_memory[y * VGA_WIDTH + x + width - 1] = (color << 8) | 191; // ┐
+    video_memory[(y + height - 1) * VGA_WIDTH + x] = (color << 8) | 192; // └
+    video_memory[(y + height - 1) * VGA_WIDTH + x + width - 1] = (color << 8) | 217; // ┘
+
+        // Horizontal edges
+    for (int i = 1; i < width -1; i++) {
+        video_memory[y * VGA_WIDTH + x + i] = (color << 8) | 196;
+        video_memory[(y + height - 1) * VGA_WIDTH + x + i] = (color << 8) | 196;
+    }
+
+    // Vertical edges
+    for (int i = 1; i < height - 1; i++) {
+        video_memory[(y + i) * VGA_WIDTH + x] = (color << 8) | 179; // │
+        video_memory[(y + i) * VGA_WIDTH + x + width - 1] = (color << 8) | 179; // │
+    }
+}
+
+void draw_title_box(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const char* title, uint8_t fg, uint8_t bg) {
+    draw_box(x, y, width, height, fg, bg);
+    if (title) {
+        uint8_t title_len = strlen(title);
+
+        if (title_len > width - 4) {
+            title_len = width - 4;
+        }
+
+        uint8_t title_x = x + (width - title_len) / 2;
+
+        for (uint8_t i = 0; i < title_len; i++) {
+            video_memory[y * VGA_WIDTH + title_x + i] = (color << 8) | title[i];
+        }
+    }
+}
+
+void draw_progress_bar(uint8_t x, uint8_t y, uint8_t width, uint8_t percent, uint8_t fg, uint8_t bg) {
+    if (width < 2 || percent > 100) return;
+
+    uint8_t fill = (percent * width) / 100;
+    uint16_t fill_char = 219;
+    uint16_t empty_char = 176;
+
+    uint8_t color = (bg << 4) | (fg & 0x0F);
+
+    for (int i = 0; i < width; i++) {
+        uint16_t c = (i < fill) ? fill_char : empty_char;
+        video_memory[y * VGA_WIDTH + x + i] = (color << 8) | c;
+    }
+}
+
+void draw_list(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const char* items[], uint8_t count, uint8_t selected) {
+    uint8_t fg = 15, bg = 0;
+    uint8_t highlight_fg = 0, highlight_bg = 15;
+
+    // Draw border box
+    draw_box(x, y, width, height, fg, bg);
+
+    // Visible area
+    uint8_t visible = height - 2;
+    uint8_t start = 0;
+
+    if (selected >= visible) {
+        start = selected - visible + 1;
+    }
+
+    for (uint8_t i = 0; i < visible; i++) {
+        uint8_t index = start + i;
+        if (index >= count) break;
+
+        uint8_t color = (i + start == selected) ? ((highlight_bg << 4) | (highlight_fg & 0x0F)) : ((bg << 4) | (fg & 0x0F));
+
+        const char* label = items[index];
+        for (uint8_t j = 0; j < width - 2; j++) {
+            char c = label[j];
+            if (c == '\0') break;
+            video_memory[(y + 1 + i) * VGA_WIDTH + x + 1 + j] = (color << 8) | c;
+        }
+    }
+}
+
+void itoa_pad(int value, char* buffer, int width) {
+    char temp[16];
+    int i = 0;
+
+    if (value == 0) {
+        temp[i++] = '0';
+    } else {
+        while (value > 0 && i < 15) {
+            temp[i++] = (value % 10) + '0';
+            value /= 10;
+        }
+    }
+
+    // Add padding
+    while (i < width) {
+        temp[i++] = '0';
+    }
+
+    // Reverse
+    for (int j = 0; j < i; j++) {
+        buffer[j] = temp[i - j - 1];
+    }
+    buffer[i] = '\0';
+}
+
+int sputf(char* out, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    char* str = out;
+    for (const char* p = format; *p != '\0'; p++) {
+        if (*p == '%') {
+            p++;
+            int width = 0;
+            if (*p == '0') {
+                p++;
+                width = *p - '0';
+                p++;
+            }
+
+            if (*p == 'd') {
+                int val = va_arg(args, int);
+                char temp[16];
+                itoa_pad(val, temp, width ? width : 1);
+                for (char* t = temp; *t; t++) {
+                    *str++ = *t;
+                }
+            }
+        } else {
+            *str++ = *p;
+        }
+    }
+
+    *str = '\0';
+    va_end(args);
+    return str - out;
 }

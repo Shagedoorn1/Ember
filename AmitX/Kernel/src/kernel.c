@@ -10,12 +10,22 @@
 #include "amitc.h"
 #include "heap.h"
 #include "fs.h"
+#include "task.h"
 #include "commands.h"
+#include "app.h"
 #include "cyclone.h"
 #include <stdint.h>
 
 int menu = 0;
 
+const char* main_menu[] = {
+    "Perch",
+    "Owly",
+    "Cyclone",
+    "Exit",
+    "Extra 1"
+};
+const int main_menu_count = sizeof(main_menu) / sizeof(main_menu[0]);
 
 extern void gdt_install();
 extern int POINTER;
@@ -39,19 +49,19 @@ void kernel_setup() {
     init_timer(100);
     fs_init();
     paging_init();
+    init_tasks();
     clear();
 }
 
 void draw_start() {
-    kernel_setup();
+    move_cursor(0,0);
     puts("Hello from the AmitX Kernel\n");
     draw_statusbar();
     puts("\n");
-    draw_menu(POINTER);
+    draw_list(0, 2, 20, 7, main_menu, main_menu_count, POINTER);
+
 
     menu = 1;
-
-
 
     if (load_cyclone) {
         puts("loading cyclone");
@@ -64,6 +74,5 @@ void kernel_main(void) {
     draw_start();
 
     while (1){
-        //blink();
     }
 }

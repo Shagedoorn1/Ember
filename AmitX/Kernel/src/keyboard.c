@@ -49,6 +49,33 @@ static const char scancode_map_shift[] = {
     // And so on...
 };
 
+void decide() {
+    menu = 0;
+    clear();
+    if (POINTER == 0) {
+        puts("Launching Perch!\n");
+        sleep(1);
+        launch_app(1);
+    } else if (POINTER == 1) {
+        puts("Launching Owly!\n");
+        sleep(1);
+        launch_app(2);
+    } else if (POINTER == 3) {
+        puts("Exiting AmitX Kernel");
+        for (int i = 0; i < 3; i++) {
+            sleep(1);
+            puts(".");
+        }
+        sleep(1);
+        qemu_exit(0);
+    } else if (POINTER == 2) {
+        load_cyclone = 1;
+        kernel_main();
+    } else {
+        kernel_main();
+    }
+}
+
 void keyboard_callback() {
     uint8_t scancode = inb(0x60);
 
@@ -82,34 +109,12 @@ void keyboard_callback() {
                 } else if (c == 'w') {
                     if (POINTER > 0) POINTER--;
                     draw_start();
-                } else if (c == '\n' && POINTER != 0) {
-                    menu = 0;
-                    clear();
-                    if (POINTER == 1) {
-                        menu = 0;
-                        puts("Launching Perch!\n");
-                        launch_app(1);
-                    } else if (POINTER == 2) {
-                        menu = 0;
-                        puts("Launching Owly!\n");
-                    } else if (POINTER == 4) {
-                        menu = 0;
-                        puts("Exiting AmitX Kernel");
-                        for (int i = 0; i < 3; i++) {
-                            sleep(1);
-                            puts(".");
-                        }
-                        sleep(1);
-                        qemu_exit(0);
-                    } else if (POINTER == 3) {
-                        menu = 0;
-                        load_cyclone = 1;
-                        kernel_main();
-                    } else {
-                        menu = 0;
-                        kernel_main();
-                    }
+                } else if (c == '\n') {
+                    decide();
+                    
                 }
+                move_cursor(0, 15);
+                putint(POINTER);
             }
         }
     }

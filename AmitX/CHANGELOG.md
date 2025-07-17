@@ -224,8 +224,12 @@ It runs commands, reads virtual files, changes logos, and doesn't even crash whe
   - Main menu is now drawn with the `draw_list` function
   - Simple task managing and scheduling
   - A `|` in cyclone as the cursor
+  - A proper syscall table and ISR128
+### Removed
+- AmitC, irrelevant, we have *real* syscalls now.
 ### Fixed
 - **Kernel**
   - Fixed bug with `back` command that would print characters in the main menu
+  - The corsor works ***properly*** now
 ### Up next
   - Experiments with improved graphics are being done

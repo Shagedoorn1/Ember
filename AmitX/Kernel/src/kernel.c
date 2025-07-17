@@ -2,13 +2,13 @@
 #include "Paging/paging.h"
 #include "io.h"
 #include "string.h"
-#include "timer.h"   // ✅ Timer init
-#include "time.h"    // ✅ sleep() and tick_count
+#include "timer.h"
+#include "time.h"
 #include "keyboard.h"
 #include "interrupts.h"
 #include "idt.h"
-#include "amitc.h"
 #include "heap.h"
+#include "syscall.h"
 #include "fs.h"
 #include "task.h"
 #include "commands.h"
@@ -50,6 +50,7 @@ void kernel_setup() {
     fs_init();
     paging_init();
     init_tasks();
+    syscall_init();
     clear();
 }
 
@@ -68,6 +69,18 @@ void draw_start() {
         cyclone_main(1);
     }
 }
+
+static inline void test_syscall() {
+    asm volatile (
+        "mov $0, %%eax\n"    // syscall number 0
+        "mov $123, %%ebx\n"
+        "mov $456, %%ecx\n"
+        "mov $789, %%edx\n"
+        "int $0x80\n"
+        :::"eax", "ebx", "ecx", "edx"
+    );
+}
+
 
 void kernel_main(void) {
     kernel_setup();

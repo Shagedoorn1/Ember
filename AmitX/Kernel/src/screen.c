@@ -102,6 +102,7 @@ void setcolor(uint8_t fg, uint8_t bg) {
 }
 
 void newline() {
+    video_memory[cursor_row * VGA_WIDTH + cursor_col] = (0x0F << 8);
     cursor_col = 0;
     cursor_row++;
     scroll_if_needed();

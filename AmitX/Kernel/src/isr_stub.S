@@ -3,9 +3,11 @@
 .global load_idt
 .global isr32
 .global isr33
+.global isr128
 
 .extern isr0_handler
 .extern isr_handler
+.extern syscall_handler
 
 isr0:
     cli         # Disable interrupts
@@ -30,6 +32,12 @@ isr33:
     push 33
     call isr_handler
     add esp, 4
+    popa
+    iret
+
+isr128:
+    pusha
+    call syscall_handler
     popa
     iret
     

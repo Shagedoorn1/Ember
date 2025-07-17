@@ -113,8 +113,6 @@ void keyboard_callback() {
                     decide();
                     
                 }
-                move_cursor(0, 15);
-                putint(POINTER);
             }
         }
     }

@@ -27,6 +27,7 @@ void cyclone_main(int first) {
             break;
         }
         puts("> ");
+        next_white();
         pos = 0;
 
         while (1) {

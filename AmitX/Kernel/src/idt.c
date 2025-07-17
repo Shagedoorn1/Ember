@@ -5,6 +5,7 @@
 extern void isr0();
 extern void isr32();
 extern void isr33();
+extern void isr128();
 extern void load_idt(uint32_t);
 
 #define IDT_ENTRIES 256
@@ -26,6 +27,7 @@ void idt_install() {
     idt_set_gate(0, (uint32_t)isr0,   0x08, 0x8E);
     idt_set_gate(32, (uint32_t)isr32, 0x08, 0x8E);
     idt_set_gate(33, (uint32_t)isr33, 0x08, 0x8E);
+    idt_set_gate(128, (uint32_t)isr128, 0x08, 0x8E);
 
     load_idt((uint32_t)&idt_ptr);
 }

@@ -35,6 +35,8 @@ set timeout=0
 set default=0
 
 menuentry \"AmitX Kernel\" {
+    set gfxpayload=keep
+    set gfxmode=1024x768x32
     multiboot /boot/kernel.bin
     boot
 }

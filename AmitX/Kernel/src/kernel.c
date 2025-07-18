@@ -1,5 +1,4 @@
 #include "screen.h"
-#include "Paging/paging.h"
 #include "io.h"
 #include "string.h"
 #include "timer.h"
@@ -48,7 +47,6 @@ void kernel_setup() {
     init_keyboard();
     init_timer(100);
     fs_init();
-    paging_init();
     init_tasks();
     syscall_init();
     clear();
@@ -84,7 +82,7 @@ static inline void test_syscall() {
 
 void kernel_main(void) {
     kernel_setup();
-    draw_start();
+    test_heap_final();
 
     while (1){
     }

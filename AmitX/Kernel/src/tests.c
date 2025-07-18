@@ -277,6 +277,7 @@ void test(int testnum) {
         char c = keyboard_getchar();
         if (c == 'q') {
             load_cyclone = 0;
+            clear();
             draw_start();
         }
     }

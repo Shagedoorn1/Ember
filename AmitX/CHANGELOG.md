@@ -231,5 +231,6 @@ It runs commands, reads virtual files, changes logos, and doesn't even crash whe
 - **Kernel**
   - Fixed bug with `back` command that would print characters in the main menu
   - The corsor works ***properly*** now
+  - Something with heap.c probably, I spent a lot of time on it. It's better now, I hope.
 ### Up next
   - Experiments with improved graphics are being done

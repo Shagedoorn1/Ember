@@ -6,11 +6,16 @@ LD = i686-elf-ld
 CFLAGS  = -m32 -ffreestanding -O2 -Wall -Wextra -Iinclude -IAmitC -Icyclone -I..
 LDFLAGS = -T boot/linker.ld -nostdlib
 
+# Directories
+SRC_DIR = src
+CYCLONE_DIR = cyclone
+BOOT_DIR = boot
+
 # Sources and objects
-SRC_C = src/kernel.c src/screen.c src/io.c src/string.c src/interrupts.c src/time.c src/timer.c src/keyboard.c src/idt.c src/logo.c src/fs.c src/settings.c src/heap.c src/tests.c src/task.c src/app.c src/syscall.c
-SRC_CYCLONE = cyclone/cyclone.c cyclone/commands.c cyclone/utils.c
-SRC_S = boot/boot.S src/isr_stub.S src/gdt.S
-OBJS  = $(SRC_C:.c=.o) $(SRC_S:.S=.o) $(SRC_AMITC:.c=.o) $(SRC_CYCLONE:.c=.o)
+SRC_C = $(wildcard $(SRC_DIR)/*.c)
+SRC_CYCLONE = $(wildcard $(CYCLONE_DIR)/*.c)
+SRC_S = $(wildcard $(BOOT_DIR)/*.S) $(wildcard $(SRC_DIR)/*.S)
+OBJS  = $(SRC_C:.c=.o) $(SRC_S:.S=.o) $(SRC_CYCLONE:.c=.o)
 
 # Default target
 all: kernel.bin

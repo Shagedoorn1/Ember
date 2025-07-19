@@ -10,47 +10,52 @@ void register_interrupt_handler(int n, void (*handler)()) {
     interrupt_handlers[n] = handler;
 }
 
-// Called from isr_stub.S
-void isr_handler(int interrupt_number) {
+// ISR entry point called from ASM stub
+void isr_handler(int interrupt_number, uint32_t error_code) {
+
     if (interrupt_handlers[interrupt_number]) {
         interrupt_handlers[interrupt_number]();
+    } else {
+        setcolor(4, 15);  // Red background, white text
+        puts("[unhandled interrupt] ");
+        puthex(interrupt_number);
+        puts(" (err=");
+        puthex(error_code);
+        puts(")\n");
+        setcolor(0, 15);
     }
 
+    // Acknowledge PIC
     if (interrupt_number >= 40) {
-        // If the interrupt came from the slave PIC
-        outb(0xA0, 0x20);
+        outb(0xA0, 0x20);  // Slave
     }
     if (interrupt_number >= 32) {
-        outb(0x20, 0x20);
+        outb(0x20, 0x20);  // Master
     }
-
 }
 
+// Special handler for divide-by-zero
 void isr0_handler() {
     setcolor(0, 15);
-    puts("[ERRNO-0]: Zero-division\n");
+    puts("[ERRNO-0]: Divide by zero\n");
     while (1) {}
 }
 
+// PIC remapping stays unchanged
 void pic_remap() {
-    // Start initialization
     outb(0x20, 0x11);
     outb(0xA0, 0x11);
 
-    // Set new vector offsets
-    outb(0x21, 0x20);  // Master PIC: 0x20–0x27
-    outb(0xA1, 0x28);  // Slave PIC: 0x28–0x2F
+    outb(0x21, 0x20);  // Master vector offset
+    outb(0xA1, 0x28);  // Slave vector offset
 
-    // Tell Master PIC there is a slave PIC at IRQ2 (0000 0100)
-    outb(0x21, 0x04);
-    outb(0xA1, 0x02);
+    outb(0x21, 0x04);  // Tell master about slave at IRQ2
+    outb(0xA1, 0x02);  // Tell slave its cascade ID
 
-    // Set mode
     outb(0x21, 0x01);
     outb(0xA1, 0x01);
 
-    // Enable all IRQs again (unmask)
-    outb(0x21, 0x00);
+    outb(0x21, 0x00);  // Unmask
     outb(0xA1, 0x00);
 
     puts("Remap complete\n");

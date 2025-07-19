@@ -44,8 +44,9 @@ void kernel_setup() {
     gdt_install();
     pic_remap();
     idt_install();
-    init_keyboard();
-    init_timer(100);
+    register_interrupt_handler(0, isr0_handler);
+    //init_keyboard();
+    //init_timer(100);
     fs_init();
     init_tasks();
     syscall_init();
@@ -79,11 +80,13 @@ static inline void test_syscall() {
     );
 }
 
-
 void kernel_main(void) {
     kernel_setup();
-    test_heap_final();
-
-    while (1){
-    }
+    //draw_start();
+    
+    volatile int one = 1;
+    volatile int zero = 0;
+    volatile int c = one / zero;
+    (void)c;
+    while (1);
 }

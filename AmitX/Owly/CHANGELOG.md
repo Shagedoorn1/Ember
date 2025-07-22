@@ -104,6 +104,8 @@ She's back — heavier, moodier, and armed with a lexer. **Owly v2** has hatched
   ./owlyrun.sh [-v|--verbose] [-n|--nodelete] [-d|--debug] <yourfile>.owly
   ```
   - Flags let you choose your flavor of pain. Want verbosity? Want lingering temp files? Want to stare deep into the debug void? It's all here.
+
+  - Void function declarations. Which means the core is ready and owlyc3 will soon be a reality. I hope
 ### fixed
 - Ghost Box Removal (Shell edition)
   - A mysterious white rectangle haunted the corner of Perch (the shell). It’s gone now. We don’t speak of it.

@@ -16,7 +16,6 @@ typedef enum {
     TOKEN_ELSE,
     TOKEN_FOR,
     TOKEN_WHILE,
-    TOKEN_INCREMENT,
 
     TOKEN_KEYWORD_FUNC,
     TOKEN_KEYWORD_PRINT,
@@ -30,6 +29,9 @@ typedef enum {
     TOKEN_OPERATOR_LTE,   //<=
     TOKEN_OPERATOR_GT,    //>
     TOKEN_OPERATOR_GTE,   //>=
+
+    TOKEN_INC,             //++
+    TOKEN_DEC              //--
 
 } TokenType;
 

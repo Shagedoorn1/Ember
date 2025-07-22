@@ -5,19 +5,33 @@
 
 #include "owlylexer.h"
 
-static FILE *out;
-static Token current_token;
-
 #define MAX_LISTS 64
 #define MAX_ARRAYS 64
 #define MAX_VAR_LEN 128
+#define MAX_FUNCTIONS 64
+
+static FILE *out;
+static Token current_token;
+bool debug = false;
 
 char list_vars[MAX_LISTS][MAX_VAR_LEN];
 int list_var_count = 0;
-bool debug = false;
-char array_vars[MAX_LISTS][MAX_VAR_LEN];
+
+char array_vars[MAX_ARRAYS][MAX_VAR_LEN];
 int array_var_count = 0;
+
+char func_names[MAX_FUNCTIONS][MAX_VAR_LEN];
+int func_count = 0;
+
 void do_next();
+
+void register_function(const char *name) {
+    if (func_count < MAX_FUNCTIONS) {
+        strncpy(func_names[func_count], name, MAX_VAR_LEN - 1);
+        func_names[func_count][MAX_VAR_LEN - 1] = '\0';
+        func_count++;
+    }
+}
 
 int is_array_var(const char *name) {
     for (int i = 0; i < array_var_count; i++) {
@@ -245,26 +259,49 @@ void parse_array_declaration() {
 }
 
 void parse_condition_expression() {
+    fprintf(out, "(");
+
+    // First token must be identifier or number
     if (current_token.type != TOKEN_IDENTIFIER && current_token.type != TOKEN_NUMBER) {
         error("expected identifier or number in condition");
     }
 
-    fprintf(out, "(");
-    fprintf(out, "%.*s ", (int)current_token.length, current_token.lexeme);
+    fprintf(out, "%.*s", (int)current_token.length, current_token.lexeme);
+
+    // Save for possible postfix use
+    int is_postfix_target = (current_token.type == TOKEN_IDENTIFIER);
     next_token();
 
+    // Handle postfix increment/decrement (e.g., i++ or i--)
+    if (is_postfix_target &&
+        (current_token.type == TOKEN_INC || current_token.type == TOKEN_DEC)) {
+
+        if (current_token.type == TOKEN_INC) {
+            fprintf(out, "++");
+        } else if (current_token.type == TOKEN_DEC) {
+            fprintf(out, "--");
+        }
+
+        next_token();
+        fprintf(out, ")");
+        return;
+    }
+
+    // Otherwise, expect a comparison operator
     switch (current_token.type) {
-        case TOKEN_OPERATOR_EQ:    fprintf(out, "== "); break;
-        case TOKEN_OPERATOR_NEQ:   fprintf(out, "!= "); break;
-        case TOKEN_OPERATOR_LT:    fprintf(out, "< "); break;
-        case TOKEN_OPERATOR_LTE:   fprintf(out, "<= "); break;
-        case TOKEN_OPERATOR_GT:    fprintf(out, "> "); break;
-        case TOKEN_OPERATOR_GTE:   fprintf(out, ">= "); break;
+        case TOKEN_OPERATOR_EQ:    fprintf(out, " == "); break;
+        case TOKEN_OPERATOR_NEQ:   fprintf(out, " != "); break;
+        case TOKEN_OPERATOR_LT:    fprintf(out, " < "); break;
+        case TOKEN_OPERATOR_LTE:   fprintf(out, " <= "); break;
+        case TOKEN_OPERATOR_GT:    fprintf(out, " > "); break;
+        case TOKEN_OPERATOR_GTE:   fprintf(out, " >= "); break;
         default:
             error("expected comparison operator in condition");
     }
+
     next_token();
 
+    // Expect right-hand side of condition
     if (current_token.type != TOKEN_IDENTIFIER && current_token.type != TOKEN_NUMBER) {
         error("expected identifier or number after comparison operator");
     }
@@ -272,6 +309,7 @@ void parse_condition_expression() {
     fprintf(out, "%.*s)", (int)current_token.length, current_token.lexeme);
     next_token();
 }
+
 void parse_while_statement() {
     expect(TOKEN_WHILE, "expected while");
     expect(TOKEN_SYMBOL, "expected '(' after while");
@@ -388,38 +426,7 @@ void parse_for_statement() {
     fprintf(out, "; ");
 
     // Parse increment expression
-    // (similar to your existing code, but ensure you parse properly)
-
-    if (current_token.type == TOKEN_IDENTIFIER) {
-        fprintf(out, "%.*s", (int)current_token.length, current_token.lexeme);
-        next_token();
-        expect(TOKEN_SYMBOL, "expected '=' in increment expression");
-        fprintf(out, " = ");
-
-        if (current_token.type == TOKEN_IDENTIFIER || current_token.type == TOKEN_NUMBER) {
-            fprintf(out, "%.*s", (int)current_token.length, current_token.lexeme);
-            next_token();
-        } else {
-            error("expected value in increment expression");
-        }
-
-        if (current_token.type == TOKEN_SYMBOL &&
-            (current_token.lexeme[0] == '+' || current_token.lexeme[0] == '-')) {
-            fprintf(out, " %c ", current_token.lexeme[0]);
-            next_token();
-
-            if (current_token.type != TOKEN_NUMBER) {
-                error("expected number after + or - in increment");
-            }
-
-            fprintf(out, "%.*s", (int)current_token.length, current_token.lexeme);
-            next_token();
-        }
-    } else if (current_token.type == TOKEN_SYMBOL && current_token.lexeme[0] == ')') {
-        // Allow empty increment expression
-    } else {
-        error("expected identifier in increment expression");
-    }
+    parse_condition_expression();
 
     expect(TOKEN_SYMBOL, "expected ')' after for loop");
     fprintf(out, ") {\n");
@@ -435,36 +442,71 @@ void parse_for_statement() {
 
 void parse_expression() {
     if (current_token.type == TOKEN_IDENTIFIER) {
-        fprintf(out, "    %.*s", (int)current_token.length, current_token.lexeme);
-        next_token();
-        expect(TOKEN_SYMBOL, "expected '=' in increment expression");
-        fprintf(out, " = ");
+        char varname[MAX_VAR_LEN] = {0};
+        int len = current_token.length < MAX_VAR_LEN - 1 ? current_token.length : MAX_VAR_LEN - 1;
+        memcpy(varname, current_token.lexeme, len);
+        varname[len] = '\0';
 
-        if (current_token.type == TOKEN_IDENTIFIER || current_token.type == TOKEN_NUMBER) {
-            fprintf(out, "%.*s", (int)current_token.length, current_token.lexeme);
-            next_token();
-        } else {
-            error("expected value in increment expression");
+        next_token();
+
+        if (current_token.type == TOKEN_SYMBOL && current_token.lexeme[0] == '(') {
+            // function call
+            next_token(); // skip '('
+            expect(TOKEN_SYMBOL, "expected ')' after function call");
+            fprintf(out, "    %s();\n", varname);
+            return;
         }
 
-        if (current_token.type == TOKEN_SYMBOL &&
-            (current_token.lexeme[0] == '+' || current_token.lexeme[0] == '-')) {
-            fprintf(out, " %c ", current_token.lexeme[0]);
+        fprintf(out, "    %s", varname);
+
+        if (current_token.type == TOKEN_INC) {
+            fprintf(out, "++;\n");
+            next_token();
+            return;
+        } else if (current_token.type == TOKEN_DEC) {
+            fprintf(out, "--;\n");
+            next_token();
+            return;
+        }
+
+        if (current_token.type == TOKEN_SYMBOL && current_token.lexeme[0] == '=') {
+            fprintf(out, " = ");
             next_token();
 
-            if (current_token.type != TOKEN_NUMBER) {
-                error("expected number after + or - in increment");
+            if (current_token.type == TOKEN_IDENTIFIER || current_token.type == TOKEN_NUMBER) {
+                fprintf(out, "%.*s", (int)current_token.length, current_token.lexeme);
+                next_token();
+
+                if (current_token.type == TOKEN_SYMBOL &&
+                    (current_token.lexeme[0] == '+' || current_token.lexeme[0] == '-')) {
+                    fprintf(out, " %c ", current_token.lexeme[0]);
+                    next_token();
+
+                    if (current_token.type != TOKEN_NUMBER) {
+                        error("expected number after '+' or '-'");
+                    }
+
+                    fprintf(out, "%.*s", (int)current_token.length, current_token.lexeme);
+                    next_token();
+                }
+
+                fprintf(out, ";\n");
+            } else {
+                error("expected identifier or number after '='");
             }
 
-            fprintf(out, "%.*s;\n", (int)current_token.length, current_token.lexeme);
-            next_token();
+            return;
         }
+
+        error("expected '++', '--', '=', or '(' after identifier");
+    } else {
+        error("expected identifier");
     }
 }
 
 void parse_function_body() {
     expect(TOKEN_SYMBOL, "expected '{' at function body start");
-    while (current_token.type != TOKEN_SYMBOL || (current_token.length != 1 || current_token.lexeme[0] != '}')) {
+    while (!(current_token.type == TOKEN_SYMBOL && current_token.lexeme[0] == '}')) {
         do_next();
     }
     expect(TOKEN_SYMBOL, "expected '}' at function body end");

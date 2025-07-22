@@ -9,25 +9,26 @@
 
 static const char* token_type_to_string(TokenType type) {
     switch (type) {
-        case TOKEN_EOF: return "EOF";
-        case TOKEN_IDENTIFIER: return "IDENTIFIER";
-        case TOKEN_NUMBER: return "NUMBER";
-        case TOKEN_STRING: return "STRING";
-        case TOKEN_SYMBOL: return "SYMBOL";
-        case TOKEN_KEYWORD_FUNC: return "KEYWORD_FUNC";
-        case TOKEN_KEYWORD_PRINT: return "KEYWORD_PRINT";
-        case TOKEN_KEYWORD_INT: return "KEYWORD_INT";
-        case TOKEN_KEYWORD_LIST: return "KEYWORD_LIST";
-        case TOKEN_KEYWORD_ARRAY: return "KEYWORD_ARRAY";
-        case TOKEN_FOR: return "FOR";
-        case TOKEN_WHILE: return "WHILE";
-        case TOKEN_INCREMENT: return "INCREMENT";
-        case TOKEN_OPERATOR_LT: return "TOKEN_OPERATOR_LT";
-        case TOKEN_OPERATOR_GT: return "TOKEN_OPERATOR_GT";
-        case TOKEN_OPERATOR_LTE: return "TOKEN_OPERATOR_LTE";
-        case TOKEN_OPERATOR_GTE: return "TOKEN_OPERATOR_GTE";
-        case TOKEN_OPERATOR_EQ: return "TOKEN_OPERATOR_EQ";
-        case TOKEN_OPERATOR_NEQ: return "TOKEN_OPERATOR_NEQ";
+        case TOKEN_EOF:             return "EOF";
+        case TOKEN_IDENTIFIER:      return "IDENTIFIER";
+        case TOKEN_NUMBER:          return "NUMBER";
+        case TOKEN_STRING:          return "STRING";
+        case TOKEN_SYMBOL:          return "SYMBOL";
+        case TOKEN_KEYWORD_FUNC:    return "KEYWORD_FUNC";
+        case TOKEN_KEYWORD_PRINT:   return "KEYWORD_PRINT";
+        case TOKEN_KEYWORD_INT:     return "KEYWORD_INT";
+        case TOKEN_KEYWORD_LIST:    return "KEYWORD_LIST";
+        case TOKEN_KEYWORD_ARRAY:   return "KEYWORD_ARRAY";
+        case TOKEN_FOR:             return "FOR";
+        case TOKEN_WHILE:           return "WHILE";
+        case TOKEN_OPERATOR_LT:     return "TOKEN_OPERATOR_LT";
+        case TOKEN_OPERATOR_GT:     return "TOKEN_OPERATOR_GT";
+        case TOKEN_OPERATOR_LTE:    return "TOKEN_OPERATOR_LTE";
+        case TOKEN_OPERATOR_GTE:    return "TOKEN_OPERATOR_GTE";
+        case TOKEN_OPERATOR_EQ:     return "TOKEN_OPERATOR_EQ";
+        case TOKEN_OPERATOR_NEQ:    return "TOKEN_OPERATOR_NEQ";
+        case TOKEN_INC:             return "TOKEN_INCREMENT";
+        case TOKEN_DEC:             return "TOKEN_DECREMENT";
 
         default: return "UNKNOWN";
     }
@@ -189,6 +190,22 @@ Token lexer_next_token(bool debug) {
     if (current_char() == '>' && src[pos + 1] == '=') {
         advance(); advance();
         tok.type = TOKEN_OPERATOR_GTE;
+        tok.lexeme = start;
+        tok.length = 2;
+        print_token(tok, debug);
+        return tok;
+    }
+    if (current_char() == '+' && src[pos + 1] == '+') {
+        advance(); advance();
+        tok.type = TOKEN_INC;
+        tok.lexeme = start;
+        tok.length = 2;
+        print_token(tok, debug);
+        return tok;
+    }
+    if (current_char() == '-' && src[pos + 1] == '-') {
+        advance(); advance();
+        tok.type = TOKEN_DEC;
         tok.lexeme = start;
         tok.length = 2;
         print_token(tok, debug);

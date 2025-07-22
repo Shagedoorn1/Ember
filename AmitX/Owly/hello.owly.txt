@@ -1,4 +1,0 @@
-func main() {
-    int x = 4;
-    print("done");
-}

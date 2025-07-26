@@ -6,6 +6,7 @@
 #include "ember.h"
 #include "parser.h"
 #include "build.h"
+#include "compilers.h"
 
 int main(int argc, char *argv[]) {
     EmberBuildConfig config = {0};

@@ -45,20 +45,23 @@ void kernel_setup() {
     pic_remap();
     idt_install();
     register_interrupt_handler(0, isr0_handler);
-    //init_keyboard();
-    //init_timer(100);
+    init_keyboard();
+    init_timer(100);
     fs_init();
     init_tasks();
     syscall_init();
+    setcolor(15, 0);
     clear();
 }
 
 void draw_start() {
     move_cursor(0,0);
+    setcolor(15, 0);
     puts("Hello from the AmitX Kernel\n");
     draw_statusbar();
     puts("\n");
     draw_list(0, 2, 20, 7, main_menu, main_menu_count, POINTER);
+    
 
 
     menu = 1;
@@ -82,11 +85,7 @@ static inline void test_syscall() {
 
 void kernel_main(void) {
     kernel_setup();
-    //draw_start();
+    draw_start();
     
-    volatile int one = 1;
-    volatile int zero = 0;
-    volatile int c = one / zero;
-    (void)c;
     while (1);
 }

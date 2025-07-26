@@ -45,6 +45,6 @@ typedef struct {
 // Lexer functions
 void lexer_init(const char *source_code);
 void lexer_cleanup(void);
-Token lexer_next_token(bool debug);
+Token lexer_next_token(int debug);
 
 #endif // OWLYLEXER_H

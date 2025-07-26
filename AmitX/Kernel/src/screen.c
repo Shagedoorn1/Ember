@@ -204,27 +204,27 @@ void get_cursor(uint8_t* x, uint8_t* y) {
 }
 
 void draw_box(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t fg, uint8_t bg) {
-    if (width < 2 || height < 2) return; //Too small
+    if (width < 2 || height < 2) return; // Too small
 
-    uint8_t color = (bg << 4) | (fg & 0x0F);
+    uint8_t color_local = (bg << 4) | (fg & 0x0F);
 
-    setcolor((color & 0x0F), (color >> 4));
+    // Remove this line: setcolor((color_local & 0x0F), (color_local >> 4));
 
-    video_memory[y * VGA_WIDTH + x] = (color << 8) | 218; //
-    video_memory[y * VGA_WIDTH + x + width - 1] = (color << 8) | 191; // ┐
-    video_memory[(y + height - 1) * VGA_WIDTH + x] = (color << 8) | 192; // └
-    video_memory[(y + height - 1) * VGA_WIDTH + x + width - 1] = (color << 8) | 217; // ┘
+    video_memory[y * VGA_WIDTH + x] = (color_local << 8) | 218; // ┌
+    video_memory[y * VGA_WIDTH + x + width - 1] = (color_local << 8) | 191; // ┐
+    video_memory[(y + height - 1) * VGA_WIDTH + x] = (color_local << 8) | 192; // └
+    video_memory[(y + height - 1) * VGA_WIDTH + x + width - 1] = (color_local << 8) | 217; // ┘
 
-        // Horizontal edges
-    for (int i = 1; i < width -1; i++) {
-        video_memory[y * VGA_WIDTH + x + i] = (color << 8) | 196;
-        video_memory[(y + height - 1) * VGA_WIDTH + x + i] = (color << 8) | 196;
+    // Horizontal edges
+    for (int i = 1; i < width - 1; i++) {
+        video_memory[y * VGA_WIDTH + x + i] = (color_local << 8) | 196;
+        video_memory[(y + height - 1) * VGA_WIDTH + x + i] = (color_local << 8) | 196;
     }
 
     // Vertical edges
     for (int i = 1; i < height - 1; i++) {
-        video_memory[(y + i) * VGA_WIDTH + x] = (color << 8) | 179; // │
-        video_memory[(y + i) * VGA_WIDTH + x + width - 1] = (color << 8) | 179; // │
+        video_memory[(y + i) * VGA_WIDTH + x] = (color_local << 8) | 179;
+        video_memory[(y + i) * VGA_WIDTH + x + width - 1] = (color_local << 8) | 179;
     }
 }
 

@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdbool.h>
 
 #define TOKEN_TYPE_WIDTH 24
 #define MAX_DEBUG_LINE_WIDTH 70
@@ -34,7 +33,7 @@ static const char* token_type_to_string(TokenType type) {
     }
 }
 
-static void print_token(Token tok, bool debug) {
+static void print_token(Token tok, int debug) {
     if (debug) {
         const char* type_str = token_type_to_string(tok.type);
         int lexeme_len = (int)tok.length;
@@ -82,7 +81,7 @@ static void skip_whitespace() {
     while (isspace(current_char())) advance();
 }
 
-Token lexer_next_token(bool debug) {
+Token lexer_next_token(int debug) {
     // First, skip whitespace BEFORE printing debug or anything else
     skip_whitespace();
 

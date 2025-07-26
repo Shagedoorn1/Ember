@@ -42,7 +42,7 @@ EXE="${BASENAME}"
 # Step 0: Compile the Owly compiler
 gcc -o owlyc2 owlyc2.c owlylexer.c
 if [ $? -ne 0 ]; then
-  echo "Failed to compile owlyc.c"
+  echo "Failed to compile owlyc2.c"
   exit 1
 fi
 
